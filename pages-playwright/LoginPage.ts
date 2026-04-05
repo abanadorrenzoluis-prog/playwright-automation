@@ -13,13 +13,13 @@ export class LoginPage {
         this.username = page.locator('input[formcontrolname="email"]'); // Locate the username input field by its form control name 'email'
         this.password = page.locator('input[formcontrolname="password"]'); // Locate the password input field by its form control name 'password'
         this.signinButton = page.locator('button[type="submit"].btn-primary:has-text("Sign in")'); // Locate the login button by its type
-        this.userDisplay = page.locator('a.nav-link >> img.user-pic'); // Locate the user display element by its text content
+        this.userDisplay = page.locator('img.user-pic'); // Locate the user display element by its text content
         this.errorMessage = page.locator('app-list-errors li:has-text("credentials invalid")'); // Locate the error message by its CSS class
     }
 
 // Add functions for actions on objects
     async gotoLoginPage() {
-        await this.page.goto('https://demo.realworld.show/login', { waitUntil: 'domcontentloaded' }); // Navigate quickly the login page
+        await this.page.goto('/login', { waitUntil: 'domcontentloaded' }); // Navigate quickly the login page
         await this.username.waitFor({state: 'visible'}); // Ensure important element is ready before interacting    
     }
 
@@ -32,21 +32,18 @@ export class LoginPage {
         await this.signinButton.click(); // Submit the login form by clicking the Sign in button
     }
 
-    async signinButtonDisabled() {
+    async expectSigninButtonDisabled() {
         await expect(this.signinButton).toBeDisabled(); // Asserts that the Sign In button is still be disabled
     }
 
     async verifyLoginSuccess() {
-        await expect(this.userDisplay).toBeVisible(); // Verify that the user display is visible, confirming a successful login
-        await expect(this.page).toHaveURL('https://demo.realworld.show/'); // Verify that the URL has changed to the dashboard page after successful login
+        await expect(this.page).toHaveURL('/'); // Verify that the URL has changed to the dashboard page after successful login
+        await this.userDisplay.waitFor({state: 'visible'}); // Verify that the user display is visible, confirming a successful login
+        //await expect(this.userDisplay).toBeVisible(); 
     }
 
     async verifyLoginUnsuccessful() {
+        await expect(this.page).toHaveURL('/login'); // Verify that the URL remains the same, indicating that the user is still on the login page after an unsuccessful login attempt
         await this.errorMessage.waitFor({state: 'visible'}); // Wait for the error message to be visible, confirming an unsuccessful
-        await expect(this.page).toHaveURL('https://demo.realworld.show/login'); // Verify that the URL remains the same, indicating that the user is still on the login page after an unsuccessful login attempt
-    }
-
-    async isSigninButtonDisabled() {
-        return await this.signinButton.isDisabled(); // Boolean check - returns a true if button is disabled, false if enabled
     }
 };
