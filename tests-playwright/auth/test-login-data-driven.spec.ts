@@ -39,38 +39,3 @@ test.describe('Data-Driven Login Tests', () => {
         });
     }
 });
-
-
-
-/*
-import {test, expect} from '@playwright/test';
-import {LoginPage} from '../../pages-playwright/LoginPage';
-import {users} from '../test-data/login-users';
-
-test.describe('Data-Driven Login Tests', () => {
-    let loginPage: LoginPage;
-
-    test.beforeEach(async ({ page }) => {
-        loginPage = new LoginPage(page);
-        await loginPage.gotoLoginPage();
-    });
-
-    for (const [index, user] of users.entries()) {
-        const usernameTitle = user.username || 'empty username';
-        const validity = user.valid ? 'Valid Login' : 'Invalid Login';
-
-        test(`Login test #${index + 1} for "${usernameTitle}" (${validity})`, async () => {
-            await loginPage.login(user.username, user.password);
-            if (!user.username || !user.password) {
-                await expect(loginPage.signinButton).toBeDisabled();
-                return;
-            }
-            await loginPage.submit();
-            if (user.valid) {
-                await loginPage.verifyLoginSuccess();
-            } else {
-                await loginPage.verifyLoginUnsuccessful();
-            }
-        });
-    }
-});*/
