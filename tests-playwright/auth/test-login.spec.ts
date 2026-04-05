@@ -1,4 +1,4 @@
-import {test} from '@playwright/test'
+import {expect, test} from '@playwright/test'
 import {LoginPage} from '../../pages-playwright/LoginPage'
 
 test.describe('login tests', () => {
@@ -11,44 +11,49 @@ test.describe('login tests', () => {
     });
 
     // Successful login using valid credentials
-    test('should login successfully with valid credentials', async () => {
-        await loginPage.login('validUsername', 'validPassword'); // Perform login using valid credentials
+    test('Should login successfully with valid credentials', async () => {
+        await loginPage.login('test.john.doe@example.com', 'Password123!'); // Perform login using valid credentials (testjohndoe test.john.doe@example.com Password123!)
+        await loginPage.submit(); // Submit the login form by clicking the Sign in button
         await loginPage.verifyLoginSuccess(); // Verify that login was successful
     });
 
     // Unsuccessful login using invalid username and invalid password
-    test('should not login successfully with invalid username and invalid password', async () => {
-        await loginPage.login('invalidUsername', 'invalidPassword'); // Perform login using invalid username and invalid password
+    test('Should not login successfully with invalid username and invalid password', async () => {
+        await loginPage.login('test.johnny.doe@example.com', 'Password123@'); // Perform login using invalid username and invalid password
+        await loginPage.submit(); // Submit the login form by clicking the Sign in button
         await loginPage.verifyLoginUnsuccessful(); // Verify that login was unsuccessful
     });
 
     // Unsuccessful login using invalid username and valid password
-    test('should not login successfully with invalid username and valid password', async () => {
-        await loginPage.login('invalidUsername', 'validPassword'); // Perform login using invalid username and valid password
+    test('Should not login successfully with invalid username and valid password', async () => {
+        await loginPage.login('test.johnny.doe@example.com', 'Password123!'); // Perform login using invalid username and valid password
+        await loginPage.submit(); // Submit the login form by clicking the Sign in button
         await loginPage.verifyLoginUnsuccessful(); // Verify that login was unsuccessful
     });
 
     // Unsuccessful login using valid username and invalid password
-    test('should not login successfully with valid username and invalid password', async () => {
-        await loginPage.login('validUsername', 'invalidPassword'); // Perform login using valid username and invalid password
+    test('Should not login successfully with valid username and invalid password', async () => {
+        await loginPage.login('test.john.doe@example.com', 'Password123@'); // Perform login using valid username and invalid password
+        await loginPage.submit(); // Submit the login form by clicking the Sign in button
         await loginPage.verifyLoginUnsuccessful(); // Verify that login was unsuccessful
     });
 
-    // Unsuccessful login with empty fields
-    test('should not login successfully with empty fields', async () => {
-        await loginPage.login('', ''); // Perform login using empty test data
-        await loginPage.verifyLoginUnsuccessful(); // Verify that login was unsuccessful
+    // Unable to click sign in button with empty username
+    test('Sign in button disabled with empty username', async () => {
+        await loginPage.password.fill('Password123!'); // Fill the password field
+        await loginPage.signinButtonDisabled(); // Asserts that the Sign In button is still be disabled
     });
 
-    // Unsuccessful login with empty username and filled password
-    test('should not login successfully with empty username and filled password', async () => {
-        await loginPage.login('', 'validPassword'); // Perform login using empty username and valid password
-        await loginPage.verifyLoginUnsuccessful(); // Verify that login was unsuccessful
+    // Unable to click sign in button with empty password
+    test('Sign in button is disabled when username is filled and password is empty', async () => {
+        await loginPage.username.fill('test.john.doe@example.com'); // Fill the username field
+        await loginPage.signinButtonDisabled(); // Asserts that the Sign In button is still be disabled
     });
-
-    // Unsuccessful login with filled username and empty password
-    test('should not login successfully with filled username and empty password', async () => {
-        await loginPage.login('validUsername', ''); // Perform login using valid username and empty password
-        await loginPage.verifyLoginUnsuccessful(); // Verify that login was unsuccessful
+    
+    // Unable to click sign in button with empty fields
+    test('Sign in button is disabled when all fields are empty', async () => {
+        await loginPage.username.fill(''); // Keep the username field empty
+        await loginPage.password.fill(''); // Keep the password field empty
+        await loginPage.signinButtonDisabled(); // Asserts that the Sign In button is still be disabled
     });
 });

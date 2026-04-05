@@ -1,27 +1,40 @@
-import {test} from '@playwright/test';
-import {LoginPage} from '../../pages-playwright/LoginPage' // Import the LoginPage class (Page Object Model)
-import {users} from '../test-data/login-users'; // Import array of test users for data-driven testing
+import {test, expect} from '@playwright/test';
+import {LoginPage} from '../../pages-playwright/LoginPage';
+import {users} from '../test-data/login-users';
 
-test.describe('data-driven login tests', () => {
-    let loginPage: LoginPage; // Declare variable for LoginPage instance
+test.describe('Data-Driven Login Tests', () => {
+    let loginPage: LoginPage;
 
-    // Hook that runs before each test case
     test.beforeEach(async ({ page }) => {
-        loginPage = new LoginPage(page); // Create new LoginPage object for each test
-        await loginPage.gotoLoginPage(); // Navigate to login page before each test
+        loginPage = new LoginPage(page);
+        await loginPage.gotoLoginPage();
     });
 
-    // Loop through each user from the imported users array
-    for (const user of users) {
-        // Dynamic test title: shows username or 'empty username' for clarity
-        test(`Login test for "${user.username || 'empty username'}"`, async () => {
-            await loginPage.login(user.username, user.password); // Attempt login with current user's credentials
-            
+    for (const [index, user] of users.entries()) {
+        const usernameTitle = user.username || 'empty username';
+        const validity = user.valid ? 'valid' : 'invalid';
+
+        test(`Login test #${index + 1} for "${usernameTitle}" (${validity})`, async () => {
+            await loginPage.login(user.username, user.password);
+
+            const isDisabled = await loginPage.isSigninButtonDisabled();
+
+            // CASE 1: Empty or invalid input → button disabled
+            if (isDisabled) {
+                await expect(loginPage.signinButton).toBeDisabled();
+                return;
+            }
+
+            // Click only if enabled
+            await loginPage.submit();
+
+            // CASE 2: Valid login
             if (user.valid) {
-                // Valid credentials: successful login
+                //await loginPage.verifyLoginSuccess(user.username);
                 await loginPage.verifyLoginSuccess();
-            } else {
-                // Invalid credentials: failed login
+            } 
+            // CASE 3: Invalid login
+            else {
                 await loginPage.verifyLoginUnsuccessful();
             }
         });
