@@ -20,7 +20,7 @@ test.describe('Data-Driven Login Tests', () => {
     test(`[#${index + 1}] ${testType} | Username: ${usernameLabel} | Password: ${passwordLabel}`, async () => {
 
       // Step 1: Fill login form
-      await loginPage.login(user.username.trim(), user.password.trim());
+      await loginPage.login(user.username, user.password);
 
       // If fields are empty, the sign in button should be disabled
       const hasEmptyField = !user.username || !user.password;

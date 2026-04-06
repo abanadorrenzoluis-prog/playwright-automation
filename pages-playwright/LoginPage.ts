@@ -48,7 +48,7 @@ export class LoginPage {
     }
 
     async assertLoginSuccess(): Promise<void> {
-        await expect(this.page).toHaveURL(/\/$/); // Verify that the URL has changed to the dashboard page after successful login
+        await expect(this.page).toHaveURL(/\/$/); // Verify that the URL has changed to the application root page after successful login
         await expect(this.userDisplay).toBeVisible(); // Verify that the user display is visible, confirming a successful login
     }
 
