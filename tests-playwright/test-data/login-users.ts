@@ -1,5 +1,3 @@
-import 'dotenv/config';
-
 // Type definition for better structure and safety
 type Credentials = {
     username: string;

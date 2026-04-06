@@ -20,8 +20,8 @@ export class LoginPage {
 
 // Add functions for actions on objects
     async goToLoginPage(timeout: number = 10000) {
-        await this.page.goto('/login', { waitUntil: 'domcontentloaded' }); // Navigate quickly the login page
-        await expect(this.username).toBeVisible();  // Ensure important element is ready before interacting    
+        await this.page.goto('/login', {waitUntil: 'domcontentloaded', timeout}); // Navigate quickly the login page
+        await expect(this.username).toBeVisible({timeout});  // Ensure important element is ready before interacting    
     }
 
     async login(username: string, password: string): Promise<void> {
