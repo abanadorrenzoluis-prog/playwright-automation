@@ -1,59 +1,70 @@
-import {test} from '@playwright/test' // Import Playwright test runner and assertion library
-import {LoginPage} from '../../pages-playwright/LoginPage' // Import your Page Object for login
+import {test} from '@playwright/test';
+import {LoginPage} from '../../pages-playwright/LoginPage';
 
-test.describe('login tests', () => {
-    let loginPage: LoginPage; // Declare a variable to hold the LoginPage object
-    
-    // This hook runs before each test case
-    test.beforeEach(async ({ page }) => { 
-        loginPage = new LoginPage(page); // Create a new instance of LoginPage and pass the Playwright page object
-        await loginPage.gotoLoginPage(); // Navigate to the login page before each test starts
+// Helper to safely access env variables
+const getEnvVar = (name: string): string => {
+    const value = process.env[name];
+    if (!value) {
+        throw new Error(`Missing environment variable: ${name}`);
+    }
+    return value;
+};
+
+// Load valid credentials from .env
+const VALID_USERNAME = getEnvVar('VALID_USERNAME');
+const VALID_PASSWORD = getEnvVar('VALID_PASSWORD');
+
+// Define invalid credentials locally
+const INVALID_USERNAME = 'nonexisting_user';
+const INVALID_PASSWORD = 'wrong_password';
+
+test.describe('Login Tests', () => {
+    let loginPage: LoginPage;
+
+    // Setup before each test
+    test.beforeEach(async ({ page }) => {
+        loginPage = new LoginPage(page);
+        await loginPage.goToLoginPage((10000));
     });
 
-    // Successful login using valid credentials
-    test('Should login successfully with valid credentials', async () => {
-        await loginPage.login(process.env.VALID_USERNAME || '', process.env.VALID_PASSWORD || ''); // Perform login using valid credentials
-        await loginPage.submit(); // Submit the login form by clicking the Sign in button
-        await loginPage.verifyLoginSuccess(); // Verify that login was successful
-    });
-
-    // Unsuccessful login using invalid username and invalid password
-    test('Should not login successfully with invalid username and invalid password', async () => {
-        await loginPage.login(process.env.INVALID_USERNAME || '', process.env.INVALID_PASSWORD || ''); // Perform login using invalid username and invalid password
-        await loginPage.submit(); // Submit the login form by clicking the Sign in button
-        await loginPage.verifyLoginUnsuccessful(); // Verify that login was unsuccessful
-    });
-
-    // Unsuccessful login using invalid username and valid password
-    test('Should not login successfully with invalid username and valid password', async () => {
-        await loginPage.login(process.env.INVALID_USERNAME || '', process.env.VALID_PASSWORD || ''); // Perform login using invalid username and valid password
-        await loginPage.submit(); // Submit the login form by clicking the Sign in button
-        await loginPage.verifyLoginUnsuccessful(); // Verify that login was unsuccessful
-    });
-
-    // Unsuccessful login using valid username and invalid password
-    test('Should not login successfully with valid username and invalid password', async () => {
-        await loginPage.login(process.env.VALID_USERNAME || '', process.env.INVALID_PASSWORD || ''); // Perform login using valid username and invalid password
-        await loginPage.submit(); // Submit the login form by clicking the Sign in button
-        await loginPage.verifyLoginUnsuccessful(); // Verify that login was unsuccessful
-    });
-
-    // Unable to click sign in button with empty username
-    test('Sign in button disabled with empty username', async () => {
-        await loginPage.password.fill(process.env.VALID_PASSWORD || ''); // Fill the password field
-        await loginPage.expectSigninButtonDisabled(); // Asserts that the Sign In button is still be disabled
-    });
-
-    // Unable to click sign in button with empty password
-    test('Sign in button is disabled when username is filled and password is empty', async () => {
-        await loginPage.username.fill(process.env.VALID_USERNAME || ''); // Fill the username field
-        await loginPage.expectSigninButtonDisabled(); // Asserts that the Sign In button is still be disabled
+    test.describe('Positive scenario', () => {
+        test('[#1] Should be able to login successfully with valid credentials', async () => {
+            await loginPage.loginAndSubmit(VALID_USERNAME, VALID_PASSWORD);
+            await loginPage.assertLoginSuccess();
+        });
     });
     
-    // Unable to click sign in button with empty fields
-    test('Sign in button is disabled when all fields are empty', async () => {
-        await loginPage.username.fill(''); // Keep the username field empty
-        await loginPage.password.fill(''); // Keep the password field empty
-        await loginPage.expectSigninButtonDisabled(); // Asserts that the Sign In button is still be disabled
+    test.describe('Negative scenarios', () => {
+        test('[#2] Should not be able to login with invalid credentials', async () => {
+            await loginPage.loginAndSubmit(INVALID_USERNAME, INVALID_PASSWORD);
+            await loginPage.assertLoginUnsuccessful();
+        });
+
+        test('[#3] Should not be able to login with invalid username', async () => {
+            await loginPage.loginAndSubmit(INVALID_USERNAME, VALID_PASSWORD);
+            await loginPage.assertLoginUnsuccessful();
+        });
+
+        test('[#4] Should not be able to login with invalid password', async () => {
+            await loginPage.loginAndSubmit(VALID_USERNAME, INVALID_PASSWORD);
+            await loginPage.assertLoginUnsuccessful();
+        });
+    });
+
+    test.describe('Empty field validation scenarios', () => {
+        test('[#5] Sign in button should be disabled when password is not filled', async () => {
+            await loginPage.username.fill(VALID_USERNAME);
+            await loginPage.assertSigninButtonDisabled();
+        });
+
+        test('[#6] Sign in button should be disabled when username is not filled', async () => {
+            await loginPage.password.fill(VALID_PASSWORD);
+            await loginPage.assertSigninButtonDisabled();
+        });
+
+        test('[#7] Sign in button should be disabled when all fields are not filled', async () => {
+            await loginPage.login('', '');
+            await loginPage.assertSigninButtonDisabled();
+        });
     });
 });

@@ -1,11 +1,51 @@
+import 'dotenv/config';
 
-// Array of users for data-driven login tests
-export const users = [
-    { username: process.env.VALID_USERNAME || '', password: process.env.VALID_PASSWORD || '', valid: true }, //valid credentials
-    { username: process.env.INVALID_USERNAME || '', password: process.env.INVALID_PASSWORD || '', valid: false }, //invalid credentials
-    { username: process.env.INVALID_USERNAME || '', password: process.env.VALID_PASSWORD || '', valid: false }, //invalid username and valid password
-    { username: process.env.VALID_USERNAME || '', password: process.env.INVALID_PASSWORD || '', valid: false }, //valid username and invalid password
-    { username: '', password: process.env.VALID_PASSWORD || '', valid: false }, //empty username and filled password
-    { username: process.env.VALID_USERNAME || '', password: '', valid: false }, //filled username and empty password
-    { username: '', password: '', valid: false } //empty fields
+// Type definition for better structure and safety
+type Credentials = {
+    username: string;
+    password: string;
+};
+
+type UserTestData = Credentials & {
+    valid: boolean;
+};
+
+// Helper to safely read environment variables
+const getEnvVar = (name: string): string => {
+    const value = process.env[name];
+    if (!value) {
+        throw new Error(`Missing Config: Environment variable ${name} is not set in .env`);
+    }
+    return value;
+};
+
+// Valid credentials (from .env - sensitive)
+export const VALID_CREDENTIALS: Credentials = {
+    username: getEnvVar('VALID_USERNAME'),
+    password: getEnvVar('VALID_PASSWORD')
+};
+
+// Invalid credentials
+export const INVALID_CREDENTIALS = {
+    empty: { username: '', password: '' },
+    wrongUserPass: { username: 'nonexisting_user', password: 'wrong_password' },
+    wrongUsername: { username: 'nonexisting_user', password: VALID_CREDENTIALS.password },
+    wrongPassword: { username: VALID_CREDENTIALS.username, password: 'wrong_password' }
+};
+
+// Data-driven test users
+export const users: UserTestData[] = [
+    // Valid login
+    { ...VALID_CREDENTIALS, valid: true },
+
+    // Invalid combinations
+    { ...INVALID_CREDENTIALS.wrongUserPass, valid: false },
+    { ...INVALID_CREDENTIALS.wrongUsername, valid: false },
+    { ...INVALID_CREDENTIALS.wrongPassword, valid: false },
+    
+
+    // Empty cases
+    { username: VALID_CREDENTIALS.username, password: '', valid: false },
+    { username: '', password: VALID_CREDENTIALS.password, valid: false },
+    { ...INVALID_CREDENTIALS.empty, valid: false }
 ];
