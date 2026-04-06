@@ -12,7 +12,6 @@ export class LoginPage {
         this.page = page; 
         this.username = page.locator('input[formcontrolname="email"]'); // Locate the username input field by its form control name 'email'
         this.password = page.locator('input[formcontrolname="password"]'); // Locate the password input field by its form control name 'password'
-        // this.signinButton = page.locator('button[type="submit"].btn-primary:has-text("Sign in")'); 
         this.signinButton = page.getByRole('button', {name: 'Sign in'}); // Locate the signin button by its type and text content
         this.userDisplay = page.locator('img.user-pic'); // Locate the user display element by its CSS class 'user-pic'
         this.errorMessage = page.locator('app-list-errors li'); // Locate the error message by its CSS class

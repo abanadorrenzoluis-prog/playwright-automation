@@ -1,3 +1,5 @@
+import {getEnvVar} from '../utils/env';
+
 // Type definition for better structure and safety
 type Credentials = {
     username: string;
@@ -6,15 +8,6 @@ type Credentials = {
 
 type UserTestData = Credentials & {
     valid: boolean;
-};
-
-// Helper to safely read environment variables
-const getEnvVar = (name: string): string => {
-    const value = process.env[name];
-    if (!value) {
-        throw new Error(`Missing Config: Environment variable ${name} is not set in .env`);
-    }
-    return value;
 };
 
 // Valid credentials (from .env - sensitive)

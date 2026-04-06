@@ -1,14 +1,7 @@
 import {test} from '@playwright/test';
 import {LoginPage} from '../../pages-playwright/LoginPage';
+import {getEnvVar} from '../utils/env';
 
-// Helper to safely access env variables
-const getEnvVar = (name: string): string => {
-    const value = process.env[name];
-    if (!value) {
-        throw new Error(`Missing environment variable: ${name}`);
-    }
-    return value;
-};
 
 // Load valid credentials from .env
 const VALID_USERNAME = getEnvVar('VALID_USERNAME');
