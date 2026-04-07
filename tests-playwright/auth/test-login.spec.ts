@@ -17,7 +17,7 @@ test.describe('Login Tests', () => {
     // Setup before each test
     test.beforeEach(async ({ page }) => {
         loginPage = new LoginPage(page);
-        await loginPage.goToLoginPage((10000));
+        await loginPage.goToLoginPage(10000);
     });
 
     test.describe('Positive scenario', () => {
