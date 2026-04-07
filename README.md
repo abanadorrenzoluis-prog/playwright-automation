@@ -9,6 +9,6 @@ This project contains sample automated test scripts for login functionality usin
 - Reusable utilities (env variables, helpers)
 
 ## How to Run
-npm install
-npx playwright test tests-playwright/auth/test-login-data-driven.spec.ts
-npx playwright test tests-playwright/auth/test-login.spec.ts
+- npm install
+- npx playwright test tests-playwright/auth/test-login-data-driven.spec.ts
+- npx playwright test tests-playwright/auth/test-login.spec.ts
