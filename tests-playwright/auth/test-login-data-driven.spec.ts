@@ -1,29 +1,44 @@
 import {test} from '@playwright/test';
-import {LoginPage} from '../../pages-playwright/LoginPage' // Import the LoginPage class (Page Object Model)
-import {users} from '../test-data/login-users'; // Import array of test users for data-driven testing
+import {LoginPage} from '../../pages-playwright/LoginPage';
+import {users} from '../test-data/login-users';
 
-test.describe('data-driven login tests', () => {
-    let loginPage: LoginPage; // Declare variable for LoginPage instance
+test.describe('Data-Driven Login Tests', () => {
+  let loginPage: LoginPage;
 
-    // Hook that runs before each test case
-    test.beforeEach(async ({ page }) => {
-        loginPage = new LoginPage(page); // Create new LoginPage object for each test
-        await loginPage.gotoLoginPage(); // Navigate to login page before each test
+  // Setup before each test
+  test.beforeEach(async ({ page }) => {
+    loginPage = new LoginPage(page);
+    await loginPage.goToLoginPage(10000); // Pass timeout in case page loads slowly
+  });
+
+  // Iterate through test data
+  users.forEach((user, index) => {
+    const usernameLabel = user.username || 'Empty';
+    const passwordLabel = user.password || 'Empty';
+    const testType = user.valid ? 'Valid Login' : 'Invalid Login';
+
+    test(`[#${index + 1}] ${testType} | Username: ${usernameLabel} | Password: ${passwordLabel}`, async () => {
+
+      // Step 1: Fill login form
+      await loginPage.login(user.username, user.password);
+
+      // If fields are empty, the sign in button should be disabled
+      const hasEmptyField = !user.username || !user.password;
+      if (hasEmptyField) {
+        await loginPage.assertSigninButtonDisabled();
+        return;
+      }
+
+      // Step 2: Submit login
+      await loginPage.assertSigninButtonEnabled();
+      await loginPage.submit();
+
+      // Step 3: Validate result
+      if (user.valid) {
+        await loginPage.assertLoginSuccess();
+      } else {
+        await loginPage.assertLoginUnsuccessful();
+      }
     });
-
-    // Loop through each user from the imported users array
-    for (const user of users) {
-        // Dynamic test title: shows username or 'empty username' for clarity
-        test(`Login test for "${user.username || 'empty username'}"`, async () => {
-            await loginPage.login(user.username, user.password); // Attempt login with current user's credentials
-            
-            if (user.valid) {
-                // Valid credentials: successful login
-                await loginPage.verifyLoginSuccess();
-            } else {
-                // Invalid credentials: failed login
-                await loginPage.verifyLoginUnsuccessful();
-            }
-        });
-    }
+  });
 });
