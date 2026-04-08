@@ -5,8 +5,14 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export default defineConfig({
-    // Global test settings
-    use: {
-        baseURL: process.env.BASE_URL || '' 
-    }
+  // Global test settings
+  use: {
+    baseURL: process.env.BASE_URL || '', 
+    headless: process.env.CI ? true : false, // If in CI, run headless. Locally, run with the browser UI visible; action speed is controlled by `slowMo` below.
+    viewport: {width: 1920, height: 1080}, // use a consistent browser size in both CI headless runs and local execution
+    actionTimeout: 0, 
+    launchOptions: {
+      slowMo: process.env.CI ? 0 : 1500, // If in CI, run at full speed. Locally, use 1500ms to delay between actions
+    },
+  },
 });
