@@ -12,3 +12,4 @@ This project contains sample automated test scripts for login functionality usin
 - npm install
 - npx playwright test tests-playwright/auth/test-login-data-driven.spec.ts
 - npx playwright test tests-playwright/auth/test-login.spec.ts
+- npx playwright test tests-playwright/auth/test-logout.spec.ts
