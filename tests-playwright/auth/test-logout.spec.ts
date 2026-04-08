@@ -20,7 +20,7 @@ test.describe('Logout Tests', () => {
         await loginPage.loginAndSubmit(VALID_USERNAME, VALID_PASSWORD);
     });
 
-    test.describe('Positive scenarios', () => {
+    test.describe('Positive scenario', () => {
         test('[#1] Should be able to redirect in Settings page and see the logout button', async () => {
             await settingsPage.goToSettingsPage();
             await settingsPage.assertSignoutButtonVisible();
