@@ -1,11 +1,11 @@
 import {Page, Locator, expect} from '@playwright/test';
-import {Article} from '../tests-playwright/utils/article-data';
+import {Article} from '../pages-playwright/types';
 
 export class EditorPage {
     readonly page: Page;
     readonly articleTitle: Locator;
     readonly articleDescription: Locator;
-    readonly articleBody: Locator
+    readonly articleBody: Locator;
     readonly articleTags: Locator;
     readonly publishArticleButton: Locator;
     
@@ -31,83 +31,23 @@ export class EditorPage {
         await expect(this.publishArticleButton).toBeVisible();
     }
 
-    async fillArticle(article: Article): Promise<void> {
-        await this.articleTitle.fill(article.title);
-        await this.articleDescription.fill(article.description);
-        await this.articleBody.fill(article.body);
+    async fillArticle(
+        article: Article,
+        options: { title?: boolean; description?: boolean; body?: boolean } = {}
+    ): Promise<void> {
+        const { title = true, description = true, body = true } = options;
+        if (title) await this.articleTitle.fill(article.title);
+        if (description) await this.articleDescription.fill(article.description);
+        if (body) await this.articleBody.fill(article.body);
+
         for (const tag of article.tags) {
-            await this.articleTags.fill(tag);
-            await this.page.keyboard.press('Enter');
+        await this.articleTags.fill(tag);
+        await this.page.keyboard.press('Enter');
         }
         await this.publishArticleButton.click();
     }
 
-    async fillArticleNoTitle(article: Article): Promise<void> {
-        await this.articleDescription.fill(article.description);
-        await this.articleBody.fill(article.body);
-        for (const tag of article.tags) {
-            await this.articleTags.fill(tag);
-            await this.page.keyboard.press('Enter');
-        }
-        await this.publishArticleButton.click();
-    }
-
-    async fillArticleNoDesc(article: Article): Promise<void> {
-        await this.articleTitle.fill(article.title);
-        await this.articleBody.fill(article.body);
-        for (const tag of article.tags) {
-            await this.articleTags.fill(tag);
-            await this.page.keyboard.press('Enter');
-        }
-        await this.publishArticleButton.click();
-    }
-
-    async fillArticleNoBody(article: Article): Promise<void> {
-        await this.articleTitle.fill(article.title);
-        await this.articleDescription.fill(article.description);
-        for (const tag of article.tags) {
-            await this.articleTags.fill(tag);
-            await this.page.keyboard.press('Enter');
-        }
-        await this.publishArticleButton.click();
-    }
-
-    async fillArticleNoDescAndBody(article: Article): Promise<void> {
-        await this.articleTitle.fill(article.title);
-        for (const tag of article.tags) {
-            await this.articleTags.fill(tag);
-            await this.page.keyboard.press('Enter');
-        }
-        await this.publishArticleButton.click();
-    }
-
-    async fillArticleNoTitleAndBody(article: Article): Promise<void> {
-        await this.articleDescription.fill(article.description);
-        for (const tag of article.tags) {
-            await this.articleTags.fill(tag);
-            await this.page.keyboard.press('Enter');
-        }
-        await this.publishArticleButton.click();
-    }
-
-    async fillArticleNoTitleAndDesc(article: Article): Promise<void> {
-        await this.articleBody.fill(article.body);
-        for (const tag of article.tags) {
-            await this.articleTags.fill(tag);
-            await this.page.keyboard.press('Enter');
-        }
-        await this.publishArticleButton.click();
-    }
-
-    async fillArticleNoTitleDescAndBody(article: Article): Promise<void> {
-        for (const tag of article.tags) {
-            await this.articleTags.fill(tag);
-            await this.page.keyboard.press('Enter');
-        }
-        await this.publishArticleButton.click();
-    }
-
-    async validateErrors(expectedErrors: string[]) {
+    async validateErrorMsg(expectedErrors: string[]) {
         await expect(this.errorMessages.first()).toBeVisible(); // optional but recommended
         const errors = await this.errorMessages.allTextContents();
 
@@ -119,5 +59,23 @@ export class EditorPage {
             )
         );
     }
- 
+
+    async getArticleSlug(): Promise<string> {
+        // URL becomes /article/<slug>
+        await this.page.waitForURL(/.*article\/.*/);
+        const url = this.page.url();
+        return url.split('/article/')[1];
+    }
+
+    async goToArticle(slug: string) {
+        await this.page.goto(`/article/${slug}`);
+    }
+
+    async assertPublishSuccess(): Promise<void> {
+        await expect(this.page).toHaveURL(/\/article$/); // Verify that the URL has changed to the article page
+    }
 };
+
+
+
+

@@ -12,7 +12,7 @@ export default defineConfig({
     viewport: {width: 1920, height: 1080}, // use a consistent browser size in both CI headless runs and local execution
     actionTimeout: 0, 
     launchOptions: {
-      slowMo: process.env.CI ? 0 : 500, // If in CI, run at full speed. Locally, use 1500ms to delay between actions
+      slowMo: process.env.CI ? 0 : 500, // If in CI, run at full speed. Locally, use 500ms to delay between actions
     },
   },
 });

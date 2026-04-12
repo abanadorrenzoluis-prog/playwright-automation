@@ -21,14 +21,17 @@ test.describe('Publish New Article Tests', () => {
         editorPage = new EditorPage(page);
         await loginPage.goToLoginPage(10000);
         await loginPage.loginAndSubmit(VALID_USERNAME, VALID_PASSWORD);
+        await loginPage.assertLoginSuccess(); 
     });
-
+    
     test.describe('Positive scenario', () => {
         test('[#1] Should be able to publish new article', async () => {
             const article = generateArticle();
             await homePage.goToEditorPage();
             await editorPage.assertPublishNewArticleForm();
             await editorPage.fillArticle(article);
+            const slug = await editorPage.getArticleSlug();
+            await editorPage.goToArticle(slug);
         });
     });
 
@@ -36,50 +39,50 @@ test.describe('Publish New Article Tests', () => {
         test('[#2] Should not be able to publish new article without title', async () => {
             const article = generateArticle();
             await homePage.goToEditorPage();
-            await editorPage.fillArticleNoTitle(article);
-            await editorPage.validateErrors(['title']);
+            await editorPage.fillArticle(article, {title: false});
+            await editorPage.validateErrorMsg(['title']);
         });
 
         test('[#3] Should not be able to publish new article without description', async () => {
             const article = generateArticle();
             await homePage.goToEditorPage();
-            await editorPage.fillArticleNoDesc(article);
-            await editorPage.validateErrors(['description']);
+            await editorPage.fillArticle(article, {description: false});
+            await editorPage.validateErrorMsg(['description']);
         });
 
         test('[#4] Should not be able to publish new article without body', async () => {
             const article = generateArticle();
             await homePage.goToEditorPage();
-            await editorPage.fillArticleNoBody(article);
-            await editorPage.validateErrors(['body']);
+            await editorPage.fillArticle(article, {body: false});
+            await editorPage.validateErrorMsg(['body']);
         });
 
         test('[#5] Should not be able to publish new article without description and body', async () => {
             const article = generateArticle();
             await homePage.goToEditorPage();
-            await editorPage.fillArticleNoDescAndBody(article);
-            await editorPage.validateErrors(['description','body']);
+            await editorPage.fillArticle(article, {description: false, body: false});
+            await editorPage.validateErrorMsg(['description','body']);
         });
 
         test('[#6] Should not be able to publish new article without title and body', async () => {
             const article = generateArticle();
             await homePage.goToEditorPage();
-            await editorPage.fillArticleNoTitleAndBody(article);
-            await editorPage.validateErrors(['title','body']);
+            await editorPage.fillArticle(article, {title: false, body: false});
+            await editorPage.validateErrorMsg(['title','body']);
         });
 
         test('[#7] Should not be able to publish new article without title and description', async () => {
             const article = generateArticle();
             await homePage.goToEditorPage();
-            await editorPage.fillArticleNoTitleAndDesc(article);
-            await editorPage.validateErrors(['title','description']);
+            await editorPage.fillArticle(article, {title: false, description: false});
+            await editorPage.validateErrorMsg(['title','description']);
         });
 
         test('[#8] Should not be able to publish new article without title, description, and body', async () => {
             const article = generateArticle();
             await homePage.goToEditorPage();
-            await editorPage.fillArticleNoTitleDescAndBody(article);
-            await editorPage.validateErrors(['title','description','body']);
+            await editorPage.fillArticle(article, {title: false, description: false, body: false});
+            await editorPage.validateErrorMsg(['title','description','body']);
         });
     });
 });
