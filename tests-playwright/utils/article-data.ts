@@ -3,7 +3,7 @@ import {Article} from '../../pages-playwright/types';
 
 
 export function generateArticle(): Article {
-  const uniqueId = Date.now();
+  const uniqueId = faker.string.uuid();
   return {
     title: `${faker.lorem.sentence()} ${uniqueId}`, // ensure unique
     description: faker.lorem.sentences(1),

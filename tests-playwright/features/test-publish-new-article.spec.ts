@@ -30,8 +30,11 @@ test.describe('Publish New Article Tests', () => {
             await homePage.goToEditorPage();
             await editorPage.assertPublishNewArticleForm();
             await editorPage.fillArticle(article);
+            await editorPage.publishArticle();
             const slug = await editorPage.getArticleSlug();
             await editorPage.goToArticle(slug);
+            await editorPage.assertPublishSuccess(slug);
+
         });
     });
 
@@ -40,6 +43,7 @@ test.describe('Publish New Article Tests', () => {
             const article = generateArticle();
             await homePage.goToEditorPage();
             await editorPage.fillArticle(article, {title: false});
+            await editorPage.publishArticle();
             await editorPage.validateErrorMsg(['title']);
         });
 
@@ -47,6 +51,7 @@ test.describe('Publish New Article Tests', () => {
             const article = generateArticle();
             await homePage.goToEditorPage();
             await editorPage.fillArticle(article, {description: false});
+            await editorPage.publishArticle();
             await editorPage.validateErrorMsg(['description']);
         });
 
@@ -54,6 +59,7 @@ test.describe('Publish New Article Tests', () => {
             const article = generateArticle();
             await homePage.goToEditorPage();
             await editorPage.fillArticle(article, {body: false});
+            await editorPage.publishArticle();
             await editorPage.validateErrorMsg(['body']);
         });
 
@@ -61,6 +67,7 @@ test.describe('Publish New Article Tests', () => {
             const article = generateArticle();
             await homePage.goToEditorPage();
             await editorPage.fillArticle(article, {description: false, body: false});
+            await editorPage.publishArticle();
             await editorPage.validateErrorMsg(['description','body']);
         });
 
@@ -68,6 +75,7 @@ test.describe('Publish New Article Tests', () => {
             const article = generateArticle();
             await homePage.goToEditorPage();
             await editorPage.fillArticle(article, {title: false, body: false});
+            await editorPage.publishArticle();
             await editorPage.validateErrorMsg(['title','body']);
         });
 
@@ -75,6 +83,7 @@ test.describe('Publish New Article Tests', () => {
             const article = generateArticle();
             await homePage.goToEditorPage();
             await editorPage.fillArticle(article, {title: false, description: false});
+            await editorPage.publishArticle();
             await editorPage.validateErrorMsg(['title','description']);
         });
 
@@ -82,6 +91,7 @@ test.describe('Publish New Article Tests', () => {
             const article = generateArticle();
             await homePage.goToEditorPage();
             await editorPage.fillArticle(article, {title: false, description: false, body: false});
+            await editorPage.publishArticle();
             await editorPage.validateErrorMsg(['title','description','body']);
         });
     });

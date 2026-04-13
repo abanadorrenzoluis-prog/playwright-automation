@@ -43,7 +43,10 @@ export class EditorPage {
         for (const tag of article.tags) {
         await this.articleTags.fill(tag);
         await this.page.keyboard.press('Enter');
-        }
+        }  
+    }
+
+    async publishArticle() {
         await this.publishArticleButton.click();
     }
 
@@ -71,8 +74,10 @@ export class EditorPage {
         await this.page.goto(`/article/${slug}`);
     }
 
-    async assertPublishSuccess(): Promise<void> {
-        await expect(this.page).toHaveURL(/\/article$/); // Verify that the URL has changed to the article page
+    async assertPublishSuccess(slug: string): Promise<void> {
+        const escapedSlug = slug.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const articleUrlPattern = new RegExp(`/article/${escapedSlug}(\\?.*)?$`);
+        await expect(this.page).toHaveURL(articleUrlPattern);
     }
 };
 
