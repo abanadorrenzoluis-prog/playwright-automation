@@ -70,17 +70,10 @@ export class EditorPage {
         return url.split('/article/')[1];
     }
 
-    async goToArticle(slug: string) {
-        await this.page.goto(`/article/${slug}`);
-    }
-
     async assertPublishSuccess(slug: string): Promise<void> {
         const escapedSlug = slug.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         const articleUrlPattern = new RegExp(`/article/${escapedSlug}(\\?.*)?$`);
         await expect(this.page).toHaveURL(articleUrlPattern);
+        await expect(this.page.getByRole('heading', { level: 1 })).toBeVisible();
     }
 };
-
-
-
-

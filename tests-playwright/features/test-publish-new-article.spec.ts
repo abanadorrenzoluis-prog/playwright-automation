@@ -32,9 +32,7 @@ test.describe('Publish New Article Tests', () => {
             await editorPage.fillArticle(article);
             await editorPage.publishArticle();
             const slug = await editorPage.getArticleSlug();
-            await editorPage.goToArticle(slug);
             await editorPage.assertPublishSuccess(slug);
-
         });
     });
 
