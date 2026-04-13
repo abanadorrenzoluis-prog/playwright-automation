@@ -1,5 +1,5 @@
 import {Page, Locator, expect} from '@playwright/test';
-import {Article} from '../pages-playwright/types';
+import {Article} from './types';
 
 export class EditorPage {
     readonly page: Page;

@@ -7,7 +7,7 @@ export function generateArticle(): Article {
   return {
     title: `${faker.lorem.sentence()} ${uniqueId}`, // ensure unique
     description: faker.lorem.sentences(1),
-    body: faker.lorem.paragraphs(2),
+    body: faker.lorem.paragraphs(3),
     tags: faker.helpers.arrayElements(
       ['qa', 'testing', 'playwright', 'automation', 'tech'], 2
     ),
