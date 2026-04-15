@@ -13,7 +13,6 @@ const INVALID_PASSWORD = 'wrong_password';
 
 test.describe('Login Tests', () => {
     let loginPage: LoginPage;
-
     // Setup before each test
     test.beforeEach(async ({ page }) => {
         loginPage = new LoginPage(page);
@@ -23,7 +22,7 @@ test.describe('Login Tests', () => {
     test.describe('Positive scenario', () => {
         test('[#1] Should be able to login successfully with valid credentials', async () => {
             await loginPage.loginAndSubmit(VALID_USERNAME, VALID_PASSWORD);
-            await loginPage.assertLoginSuccess();
+            await loginPage.assertLoginSuccess(); 
         });
     });
     
