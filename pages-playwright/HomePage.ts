@@ -14,8 +14,7 @@ export class HomePage {
         this.newArticleLink = page.getByRole('link', { name: /New Article/i }); // Locate the new article link by its role and name
         this.settingsLink = page.getByRole('link', { name: /Settings/i }); // Locate the settings link by its type and text content
         this.profileLink = page.getByRole('link', { name: /Profile/i }); // Locate the profile link by its role and name
-        this.articlePreviewLink = page.locator('a.preview-link').first(); // Locate the first article preview
-        
+        this.articlePreviewLink = page.locator('a.preview-link').first(); // Locate the first article preview 
     }
 
 // Add functions for actions on objects
