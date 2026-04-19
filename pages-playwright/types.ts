@@ -4,3 +4,7 @@ export interface Article {
     body: string;
     tags: string[];
 }
+
+export interface Comment {
+    body: string;
+}
