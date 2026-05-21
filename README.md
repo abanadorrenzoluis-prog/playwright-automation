@@ -14,3 +14,4 @@ This project contains sample automated test scripts for login functionality usin
 - npx playwright test tests-playwright/auth/test-login.spec.ts
 - npx playwright test tests-playwright/auth/test-logout.spec.ts
 - npx playwright test tests-playwright/features/test-publish-new-article.spec.ts
+- npx playwright test tests-playwright/features/test-post-comment.spec.ts
