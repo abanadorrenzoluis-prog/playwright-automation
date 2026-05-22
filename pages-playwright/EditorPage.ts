@@ -8,6 +8,7 @@ export class EditorPage {
     readonly articleBody: Locator;
     readonly articleTags: Locator;
     readonly publishArticleButton: Locator;
+    readonly editArticleButton: Locator;
     
     constructor(page: Page) {
         this.page = page;
@@ -16,6 +17,7 @@ export class EditorPage {
         this.articleBody = page.locator('textarea[placeholder="Write your article (in markdown)"]'); // Locate the article body textarea by its placeholder
         this.articleTags = page.locator('input[placeholder="Enter tags"]'); // Locate the article tags input field by its placeholder
         this.publishArticleButton = page.getByRole('button', { name: /Publish Article/i }); // Locate the publish article button by its role and name
+        this.editArticleButton = page.getByRole("link", { name: "Edit Article" }).first(); // Locate the edit article button by its role and name
     }
 
     get errorMessages() {
@@ -76,4 +78,24 @@ export class EditorPage {
         await expect(this.page).toHaveURL(articleUrlPattern);
         await expect(this.page.getByRole('heading', { level: 1 })).toBeVisible();
     }
+
+    async updateArticle() {
+        await this.editArticleButton.click();
+    }
+
+    async verifyArticleFieldsEnabled() {
+        await Promise.all([
+            expect(this.articleTitle).toBeEnabled(),
+            expect(this.articleDescription).toBeEnabled(),
+            expect(this.articleBody).toBeEnabled()
+        ]);
+    }
+
+    async clearArticleFields() {
+        await this.articleTitle.clear();
+        await this.articleDescription.clear();
+        await this.articleBody.clear();
+    }
+    
+
 };
