@@ -18,3 +18,4 @@ Test website: https://demo.realworld.show
 - npx playwright test tests-playwright/features/test-publish-new-article.spec.ts
 - npx playwright test tests-playwright/features/test-post-comment.spec.ts
 - npx playwright test tests-playwright/features/test-update-article.spec.ts
+- npx playwright test tests-playwright/features/test-delete-article.spec.ts
