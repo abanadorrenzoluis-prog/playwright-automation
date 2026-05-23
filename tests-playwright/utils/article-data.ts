@@ -44,3 +44,17 @@ export function generateUpdateArticleParts(): Article {
     ),
   };
 }
+
+
+export function generateArticleForDeletion(): Article {
+  const uniqueId = faker.string.uuid();
+  const articleTitleUpdate = `Article for deletion ${uniqueId}`;
+  return {
+    title: `${articleTitleUpdate}`.slice(0, 30),
+    description: faker.lorem.sentences(1),
+    body: faker.lorem.paragraphs(3),
+    tags: faker.helpers.arrayElements(
+      ['qa', 'testing', 'playwright', 'automation', 'tech'], 2
+    ),
+  };
+}
