@@ -10,7 +10,7 @@ import {generateLongComment, generateShortComment} from '../utils/comment-data';
 const VALID_USERNAME = getEnvVar('VALID_USERNAME');
 const VALID_PASSWORD = getEnvVar('VALID_PASSWORD');
 
-test.describe('Publish New Article Tests', () => {
+test.describe('Post Comment Tests', () => {
     let loginPage: LoginPage;
     let homePage: HomePage;
     let articlePage: ArticlePage;
