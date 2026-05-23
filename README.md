@@ -3,6 +3,8 @@
 ## Overview
 This project contains sample automated test scripts for login functionality using Playwright and TypeScript.
 
+Test website: https://demo.realworld.show
+
 ## Features
 - Data-driven testing
 - Page Object Model (POM)
