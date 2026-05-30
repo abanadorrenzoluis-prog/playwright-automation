@@ -9,6 +9,7 @@ export class EditorPage {
     readonly articleTags: Locator;
     readonly publishArticleButton: Locator;
     readonly editArticleButton: Locator;
+    readonly deleteArticleButton: Locator;
     
     constructor(page: Page) {
         this.page = page;
@@ -18,6 +19,7 @@ export class EditorPage {
         this.articleTags = page.locator('input[placeholder="Enter tags"]'); // Locate the article tags input field by its placeholder
         this.publishArticleButton = page.getByRole('button', { name: /Publish Article/i }); // Locate the publish article button by its role and name
         this.editArticleButton = page.getByRole("link", { name: "Edit Article" }).first(); // Locate the edit article button by its role and name
+        this.deleteArticleButton = page.getByRole("button", { name: "Delete Article" }).first(); // Locate the delete article button by its role and name
     }
 
     get errorMessages() {
@@ -79,7 +81,7 @@ export class EditorPage {
         await expect(this.page.getByRole('heading', { level: 1 })).toBeVisible();
     }
 
-    async updateArticle() {
+    async updateArticle(): Promise<void>  {
         await this.editArticleButton.click();
     }
 
@@ -96,6 +98,21 @@ export class EditorPage {
         await this.articleDescription.clear();
         await this.articleBody.clear();
     }
+
+    async assertDeleteArticleButton() {
+        await expect(this.deleteArticleButton).toBeVisible(); 
+    }
     
+    async assertDeleteArticleButtonNotVisible() {
+        await expect(this.deleteArticleButton).not.toBeVisible(); 
+    }
+
+    async deleteArticle(): Promise<void> {
+        await this.deleteArticleButton.click();
+    }
+    
+    async assertDeleteArticleSuccess() {
+        await expect(this.page).toHaveURL(/\/$/); // Verify that the URL has changed to the application root page after successful login
+    }
 
 };
